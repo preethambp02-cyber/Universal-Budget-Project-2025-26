@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Union Budget 2025–26 | Income & Spending</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root{
+    --bg:#0b0b0b;
+    --card:#161616;
+    --gold:#ffd700;
+    --gold-glow:rgba(255,215,0,0.45);
+    --text:#f8fafc;
+    --ack:#cdb4db;
+}
+
+body{
+    margin:0;
+    font-family:"Segoe UI",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    font-size:20px;
+}
+
+header{
+    text-align:center;
+    padding:40px 20px;
+    background:linear-gradient(180deg,#0b0b0b,#141414);
+}
+
+header h1{
+    color:var(--gold);
+    font-size:3.2rem;
+    text-shadow:0 0 40px var(--gold-glow);
+}
+
+header p{
+    font-size:1.3rem;
+    color:#ddd;
+}
+
+.arrow-box{
+    margin-top:20px;
+    color:var(--gold);
+    font-size:1.3rem;
+}
+
+.arrow{
+    font-size:2.8rem;
+    animation:bounce 1.2s infinite;
+}
+
+@keyframes bounce{
+    50%{transform:translateY(10px)}
+}
+
+/* DROPDOWN */
+select{
+    margin-top:14px;
+    padding:18px 34px;
+    border-radius:45px;
+    border:none;
+    background:linear-gradient(135deg,#ffd700,#ffcc00);
+    color:#000;
+    font-size:1.3rem;
+    font-weight:800;
+    box-shadow:0 0 40px var(--gold-glow);
+}
+
+/* LAYOUT */
+.container{
+    max-width:1300px;
+    margin:auto;
+    padding:40px 25px;
+}
+
+.card{
+    background:var(--card);
+    padding:35px;
+    border-radius:30px;
+    margin-bottom:45px;
+    box-shadow:0 0 45px var(--gold-glow);
+}
+
+.center{text-align:center;}
+
+.toggle button{
+    margin:12px;
+    padding:16px 30px;
+    border-radius:35px;
+    border:none;
+    background:#111;
+    color:var(--gold);
+    font-size:1.2rem;
+    box-shadow:0 0 25px var(--gold-glow);
+}
+
+canvas{width:100%!important;}
+
+/* SUMMARY */
+.summary h2{
+    font-size:2.4rem;
+    color:var(--gold);
+}
+.total{
+    font-size:3rem;
+    margin:18px 0;
+    font-weight:800;
+}
+
+/* BREAKDOWN */
+.item{
+    margin-top:18px;
+    padding:22px;
+    background:#111;
+    border-radius:20px;
+}
+.item button{
+    width:100%;
+    background:none;
+    border:none;
+    color:var(--gold);
+    font-size:1.25rem;
+    text-align:left;
+    font-weight:700;
+}
+.item p{
+    display:none;
+    margin-top:14px;
+    line-height:1.8;
+    font-size:1.15rem;
+    color:#eee;
+}
+
+/* ACKNOWLEDGEMENT */
+.ack-btn{
+    width:100%;
+    padding:26px;
+    font-size:1.9rem;
+    border:none;
+    border-radius:35px;
+    background:linear-gradient(135deg,#1f1f1f,#111);
+    color:var(--gold);
+    box-shadow:0 0 45px var(--gold-glow);
+}
+
+.ack{
+    display:none;
+    margin-top:30px;
+    padding:40px;
+    background:#111;
+    border-radius:30px;
+    line-height:2;
+    font-size:1.25rem;
+    color:var(--ack);
+    text-align:center;
+}
+.signature{
+    margin-top:30px;
+    font-size:1.4rem;
+    color:#ffcad4;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🇮🇳 Union Budget 2025–26</h1>
+    <p>Income & Expenditure – Visual and Conceptual Study</p>
+
+    <div class="arrow-box">
+        <div class="arrow">⬇️</div>
+        Press here to switch between <b>Income</b> and <b>Spending</b>
+    </div>
+
+    <select id="mode" onchange="updateAll()">
+        <option value="income">Government Income</option>
+        <option value="spending">Government Spending</option>
+    </select>
+</header>
+
+<div class="container">
+
+    <!-- SUMMARY -->
+    <div class="card summary center">
+        <h2 id="summaryTitle"></h2>
+        <div class="total" id="totalAmount"></div>
+        <p>Exact values and percentages are shown below</p>
+    </div>
+
+    <!-- CHART -->
+    <div class="card center">
+        <div class="toggle">
+            <button onclick="setType('pie')">Pie Chart</button>
+            <button onclick="setType('bar')">Bar Graph</button>
+        </div>
+        <canvas id="chart" height="440"></canvas>
+    </div>
+
+    <!-- BREAKDOWN -->
+    <div class="card">
+        <h2 class="center">Tap Any Sector to See Its Meaning</h2>
+        <div id="breakdown"></div>
+    </div>
+
+    <!-- ACKNOWLEDGEMENT -->
+    <button class="ack-btn" onclick="toggleAck()">📜 Acknowledgement</button>
+    <div class="ack" id="ack">
+        <p>
+            We express our sincere gratitude to <b>St Joseph’s School</b> for providing us
+            with the opportunity to undertake this project and deepen our understanding
+            of India’s economic framework.
+        </p>
+        <p>
+            We would like to convey our heartfelt thanks to <b>Divya John Ma’am</b> for her
+            guidance, encouragement, and constant support throughout the project.
+        </p>
+        <p>
+            We also thank <b>all the participants</b> for their cooperation, teamwork,
+            and dedication which contributed to the successful completion of this project.
+        </p>
+        <div class="signature">
+            Made with ❤️ by <b>Preetham</b> (Webpage)
+        </div>
+    </div>
+
+</div>
+
+<script>
+const income=[
+ {n:"Income Tax",v:1040000,e:"Tax collected from individuals based on their income."},
+ {n:"Corporate Tax",v:990000,e:"Tax paid by companies on their profits."},
+ {n:"GST",v:1160000,e:"Indirect tax on goods and services across India."},
+ {n:"Customs Duty",v:210000,e:"Tax on imported and exported goods."},
+ {n:"Non-Tax Revenue",v:350000,e:"Income from fees, dividends, and interest."}
+];
+
+const spending=[
+ {n:"State Transfers",v:2501284,e:"Funds transferred to states for development."},
+ {n:"Interest Payments",v:1276338,e:"Repayment of government borrowings."},
+ {n:"Defence",v:491732,e:"Expenditure on national security and armed forces."},
+ {n:"Infrastructure",v:548649,e:"Development of roads, railways, and transport."},
+ {n:"Social Sector",v:247162,e:"Spending on health, education, and welfare."}
+];
+
+/* TRUE DIFFERENT COLOURS (NO SHADES) */
+const pieColors=["#e63946","#2a9d8f","#457b9d","#6a4c93","#f4a261"];
+const barColors=["#ff006e","#8338ec","#3a86ff","#ffbe0b","#06d6a0"];
+
+let chartType="pie", chart;
+
+function setType(t){chartType=t; updateAll();}
+
+function updateAll(){
+ const data = mode.value==="income"?income:spending;
+ const total = data.reduce((a,b)=>a+b.v,0);
+
+ summaryTitle.innerText = mode.value==="income"?"Total Government Income":"Total Government Expenditure";
+ totalAmount.innerText = "₹ " + total.toLocaleString() + " Crore (100%)";
+
+ breakdown.innerHTML="";
+ data.forEach(d=>{
+   const percent=((d.v/total)*100).toFixed(2);
+   breakdown.innerHTML+=`
+   <div class="item">
+     <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">
+       ${d.n} – ₹${d.v.toLocaleString()} Cr (${percent}%)
+     </button>
+     <p>${d.e}</p>
+   </div>`;
+ });
+
+ if(chart) chart.destroy();
+ chart=new Chart(document.getElementById("chart"),{
+  type:chartType,
+  data:{
+   labels:data.map(d=>d.n),
+   datasets:[{
+     data:data.map(d=>d.v),
+     backgroundColor:chartType==="pie"?pieColors:barColors
+   }]
+  },
+  options:{
+   scales:chartType==="bar"?{y:{ticks:{callback:v=>"₹"+v.toLocaleString()}}}:{}
+  }
+ });
+}
+
+function toggleAck(){
+ ack.style.display=ack.style.display==="block"?"none":"block";
+}
+
+updateAll();
+</script>
+
+</body>
+</html>
